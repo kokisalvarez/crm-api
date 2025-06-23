@@ -1,0 +1,12 @@
+export default async function handler(req, res) {
+  if (req.method === 'POST') {
+    const { nombre, telefono, edad, curso, motivo } = req.body;
+
+    // Aquí simulas guardar los datos
+    console.log("Datos recibidos:", { nombre, telefono, edad, curso, motivo });
+
+    res.status(200).json({ mensaje: 'Registro exitoso' });
+  } else {
+    res.status(405).json({ error: 'Método no permitido' });
+  }
+}
