@@ -1,4 +1,16 @@
 // api/registro.js
+
+// ①: Volcamos TODAS las env vars relevantes
+console.log('>>> ENV FIREBASE_PROJECT_ID:',    JSON.stringify(process.env.FIREBASE_PROJECT_ID))
+console.log('>>> ENV FIREBASE_CLIENT_EMAIL:',  JSON.stringify(process.env.FIREBASE_CLIENT_EMAIL))
+console.log('>>> ENV FIREBASE_PRIVATE_KEY:',    process.env.FIREBASE_PRIVATE_KEY
+                                                   ? `[string of length ${process.env.FIREBASE_PRIVATE_KEY.length}]`
+                                                   : null)
+console.log('>>> ENV FIREBASE_SERVICE_ACCOUNT:', process.env.FIREBASE_SERVICE_ACCOUNT
+                                                   ? `[string of length ${process.env.FIREBASE_SERVICE_ACCOUNT.length}]`
+                                                   : null)
+
+
 const admin = require('firebase-admin')
 
 // ─── DEPURACIÓN ──────────────────────────────────────────────────────────────
