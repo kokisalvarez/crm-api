@@ -1,6 +1,19 @@
 // api/registro.js
 const admin = require('firebase-admin')
 
+
+// DEBUG: imprime si llegan las ENV vars
+console.log('> ENV PROJECT_ID:', process.env.FIREBASE_PROJECT_ID?.slice(0,10),'…');
+console.log('> ENV CLIENT_EMAIL:', process.env.FIREBASE_CLIENT_EMAIL);
+console.log('> ENV PRIVATE_KEY startsWith -----BEGIN:', process.env.FIREBASE_PRIVATE_KEY?.startsWith('-----BEGIN'));
+
+const serviceAccount = {
+  projectId:   process.env.FIREBASE_PROJECT_ID,
+  clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+  privateKey:  process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
+}
+
+
 // Reconstruye tus creds desde ENV
 const serviceAccount = {
   projectId:   process.env.FIREBASE_PROJECT_ID,
