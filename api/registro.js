@@ -1,15 +1,9 @@
-// api/registro.js
-
 import admin from "firebase-admin";
+import serviceAccount from "../keys/firebase-service-account.json";
 
-// Inicialización usando variables de entorno
 if (!admin.apps.length) {
   admin.initializeApp({
-    credential: admin.credential.cert({
-      projectId: process.env.FIREBASE_PROJECT_ID,
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
-    }),
+    credential: admin.credential.cert(serviceAccount),
   });
 }
 
@@ -34,11 +28,12 @@ export default async function handler(req, res) {
       motivo,
       timestamp: admin.firestore.FieldValue.serverTimestamp(),
     });
+
     return res.status(200).json({ success: true, id: docRef.id });
   } catch (error) {
-    console.error("Error en handler:", error);
-    return res
-      .status(500)
-      .json({ error: "Error al registrar", detalle: error.message });
+    return res.status(500).json({
+      error: "Error al registrar",
+      detalle: error.message,
+    });
   }
 }
