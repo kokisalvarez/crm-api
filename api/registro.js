@@ -6,9 +6,11 @@ import serviceAccount from '../keys/firebase-service-account.json'
 if (!admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    databaseURL: `https://${serviceAccount.project_id}.firebaseio.com`
+    projectId: serviceAccount.project_id
+    // databaseURL sólo si usas Realtime DB, no hace falta para Firestore
   })
 }
+
 
 const db = admin.firestore()
 
