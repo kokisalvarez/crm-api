@@ -10,7 +10,6 @@ console.log('>>> ENV FIREBASE_SERVICE_ACCOUNT:', process.env.FIREBASE_SERVICE_AC
                                                    ? `[string of length ${process.env.FIREBASE_SERVICE_ACCOUNT.length}]`
                                                    : null)
 
-
 const admin = require('firebase-admin')
 
 // ─── DEPURACIÓN ──────────────────────────────────────────────────────────────
