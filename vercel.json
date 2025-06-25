@@ -1,7 +1,0 @@
-{
-  "functions": {
-    "api/registro.js": {
-      "runtime": "nodejs18.x"
-    }
-  }
-}
