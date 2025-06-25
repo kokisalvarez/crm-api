@@ -1,12 +1,7 @@
 {
   "functions": {
     "api/registro.js": {
- 
-    "FIREBASE_PROJECT_ID":   "@firebase_project_id",
-    "FIREBASE_CLIENT_EMAIL": "@firebase_client_email",
-    "FIREBASE_PRIVATE_KEY":  "@firebase_private_key"
-  
-}
-
+      "runtime": "nodejs18.x"
+    }
   }
 }
