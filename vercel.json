@@ -1,9 +1,7 @@
 {
   "functions": {
     "api/registro.js": {
-      "runtime": "nodejs18.x",
       "includeFiles": "keys/firebase-service-account.json"
     }
   }
 }
-
