@@ -1,14 +1,16 @@
 // api/registro.js
-
 const admin = require('firebase-admin')
 
-// Carga las credenciales desde la ENV var
-const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
+// Reconstruye tus creds desde ENV
+const serviceAccount = {
+  projectId:   process.env.FIREBASE_PROJECT_ID,
+  clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+  privateKey:  process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
+}
 
 if (!admin.apps.length) {
   admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    projectId: serviceAccount.project_id
+    credential: admin.credential.cert(serviceAccount)
   })
 }
 
@@ -16,16 +18,12 @@ const db = admin.firestore()
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
-    return res
-      .status(405)
-      .json({ error: 'Method not allowed. Usa POST con JSON' })
+    return res.status(405).json({ error: 'Method not allowed. Usa POST con JSON' })
   }
-
   const { nombre, telefono, edad, curso, motivo } = req.body || {}
   if (!nombre || !telefono || !edad || !curso || !motivo) {
     return res.status(400).json({ error: 'Faltan campos requeridos' })
   }
-
   try {
     const docRef = await db.collection('registros').add({
       nombre,
