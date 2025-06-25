@@ -1,22 +1,9 @@
-import admin from 'firebase-admin'
+// api/registro.js
 
-// Parseamos la ENV que guardaste en Vercel
+const admin = require('firebase-admin')
+
+// Carga las credenciales desde la ENV var
 const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
-
-import admin from 'firebase-admin'
-
-export default async function handler(req, res) {
-  console.log('ℹ️ FIREBASE_SERVICE_ACCOUNT existe:', !!process.env.FIREBASE_SERVICE_ACCOUNT)
-  try {
-    const creds = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
-    console.log('ℹ️ Service Account email:', creds.client_email)
-  } catch (e) {
-    console.error('❌ JSON inválido:', e.message)
-    return res.status(500).json({ error: 'Credenciales inválidas', detalle: e.message })
-  }
-  // …inicialización y resto…
-}
-
 
 if (!admin.apps.length) {
   admin.initializeApp({
@@ -27,18 +14,30 @@ if (!admin.apps.length) {
 
 const db = admin.firestore()
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
+  if (req.method !== 'POST') {
+    return res
+      .status(405)
+      .json({ error: 'Method not allowed. Usa POST con JSON' })
+  }
+
+  const { nombre, telefono, edad, curso, motivo } = req.body || {}
+  if (!nombre || !telefono || !edad || !curso || !motivo) {
+    return res.status(400).json({ error: 'Faltan campos requeridos' })
+  }
+
   try {
-    const { nombre, telefono, edad, curso, motivo } = req.body
-    if (!nombre || !telefono || !edad || !curso || !motivo) {
-      return res.status(400).json({ error: 'Faltan campos requeridos' })
-    }
-    const doc = await db
-      .collection('registros')
-      .add({ nombre, telefono, edad, curso, motivo, createdAt: admin.firestore.FieldValue.serverTimestamp() })
-    res.status(201).json({ success: true, id: doc.id })
+    const docRef = await db.collection('registros').add({
+      nombre,
+      telefono,
+      edad,
+      curso,
+      motivo,
+      createdAt: admin.firestore.FieldValue.serverTimestamp()
+    })
+    return res.status(201).json({ success: true, id: docRef.id })
   } catch (e) {
-    console.error(e)
-    res.status(500).json({ error: 'Error al registrar', detalle: e.message })
+    console.error('Firestore error:', e)
+    return res.status(500).json({ error: 'Error al registrar', detalle: e.message })
   }
 }
