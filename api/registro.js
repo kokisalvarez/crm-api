@@ -1,24 +1,25 @@
 // api/registro.js
 
 import admin from "firebase-admin";
-import serviceAccount from "../keys/firebase-service-account.json";
 
-// Inicializa Firebase Admin si aún no está hecho
+// Inicialización usando variables de entorno
 if (!admin.apps.length) {
   admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
+    credential: admin.credential.cert({
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
+    }),
   });
 }
 
 export default async function handler(req, res) {
-  // Solo aceptamos POST
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Método no permitido" });
   }
 
   const { nombre, telefono, edad, curso, motivo } = req.body;
 
-  // Validación básica
   if (!nombre || !telefono || !curso) {
     return res.status(400).json({ error: "Faltan datos requeridos" });
   }
@@ -33,9 +34,9 @@ export default async function handler(req, res) {
       motivo,
       timestamp: admin.firestore.FieldValue.serverTimestamp(),
     });
-
     return res.status(200).json({ success: true, id: docRef.id });
   } catch (error) {
+    console.error("Error en handler:", error);
     return res
       .status(500)
       .json({ error: "Error al registrar", detalle: error.message });
