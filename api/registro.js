@@ -1,19 +1,25 @@
 // api/registro.js
-const admin = require('firebase-admin')
 
-const serviceAccount = {
-  projectId:   process.env.FIREBASE_PROJECT_ID,
-  clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-  privateKey:  process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
+const admin = require("firebase-admin");
+
+// Decodifica JSON desde Base64
+function getServiceAccount() {
+  const b64 = process.env.FIREBASE_SERVICE_ACCOUNT_BASE64;
+  const json = Buffer.from(b64, "base64").toString("utf8");
+  return JSON.parse(json);
 }
 
 if (!admin.apps.length) {
   admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
-  })
+    credential: admin.credential.cert(getServiceAccount()),
+  });
 }
 
-const db = admin.firestore()
+const db = admin.firestore();
+
+module.exports = async (req, res) => {
+  // ...resto de tu handler sin cambios...
+};
 
 module.exports = async (req, res) => {
   // CORS
