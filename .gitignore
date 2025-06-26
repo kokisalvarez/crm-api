@@ -1,2 +1,6 @@
 .vercel
 
+# No subir credenciales privadas
+/keys/firebase-service-account.json
+
+
