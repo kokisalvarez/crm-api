@@ -2,20 +2,19 @@
 
 const admin = require("firebase-admin");
 
-// DEBUG: Verifica que la var de entorno existe
+// DEBUG #1: Verifica que la var de entorno existe
 console.log(
   ">> ENV VAR FIREBASE_SERVICE_ACCOUNT_BASE64 length:",
   process.env.FIREBASE_SERVICE_ACCOUNT_BASE64?.length
 );
 
-// Intenta parsear el JSON Base64
+// DEBUG #2: Decodifica y muestra el inicio del JSON
 let serviceAccount;
 try {
   const raw = Buffer
     .from(process.env.FIREBASE_SERVICE_ACCOUNT_BASE64 || "", "base64")
     .toString("utf8");
 
-  // DEBUG: Muestra los primeros 100 caracteres del JSON decodificado
   console.log(
     ">> Decoded JSON starts with:",
     raw.substring(0, 100).replace(/\r?\n/g, "\\n")
@@ -26,7 +25,7 @@ try {
   console.error(">> ERROR parsing Base64 JSON:", e);
 }
 
-// Inicializa Firebase Admin con las credenciales
+// Inicializa Firebase Admin
 if (!admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
