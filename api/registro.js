@@ -1,24 +1,28 @@
-// api/registro.js
-
 const admin = require("firebase-admin");
 
-// Decodifica JSON desde Base64
-function getServiceAccount() {
-  const b64 = process.env.FIREBASE_SERVICE_ACCOUNT_BASE64;
-  const json = Buffer.from(b64, "base64").toString("utf8");
-  return JSON.parse(json);
+// DEBUG: Verifica que la var de entorno existe
+console.log(">> ENV VAR FIREBASE_SERVICE_ACCOUNT_BASE64 length:", process.env.FIREBASE_SERVICE_ACCOUNT_BASE64?.length);
+
+// Intenta parsear
+let serviceAccount;
+try {
+  const raw = Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT_BASE64 || "", "base64").toString("utf8");
+  console.log(">> Decoded JSON starts with:", raw.substring(0, 50).replace(/\r?\n/g, "\\n"));
+  serviceAccount = JSON.parse(raw);
+} catch (e) {
+  console.error(">> ERROR parsing Base64 JSON:", e);
 }
 
 if (!admin.apps.length) {
   admin.initializeApp({
-    credential: admin.credential.cert(getServiceAccount()),
+    credential: admin.credential.cert(serviceAccount),
   });
 }
 
 const db = admin.firestore();
 
 module.exports = async (req, res) => {
-  // ...resto de tu handler sin cambios...
+  // ... resto sin cambios ...
 };
 
 module.exports = async (req, res) => {
